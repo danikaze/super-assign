@@ -1,7 +1,7 @@
 {
-  "name": "ts-lib-boilerplate",
+  "name": "super-assign",
   "version": "1.0.0",
-  "description": "A boilerplate to to create npm/libraries based on TypeScript",
+  "description": "Vitaminized object assignation with customizable options and inferred types",
   "main": "index.js",
   "scripts": {
     "build": "npm run clean && scripts/build.sh",
@@ -26,10 +26,14 @@
   "private": true,
   "keywords": [
     "typescript",
-    "npm",
-    "lib",
-    "boilerplate",
-    "library"
+    "Object.assign",
+    "extend-object",
+    "extend",
+    "deep assign",
+    "jQuery",
+    "deep extend",
+    "deep",
+    "patch"
   ],
   "author": "danikaze <danikaze@gmail.com>",
   "license": "ISC",
