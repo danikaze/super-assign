@@ -1,6 +1,6 @@
 {
   "name": "super-assign",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vitaminized object assignation with customizable options and inferred types",
   "main": "index.js",
   "scripts": {
