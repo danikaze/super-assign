@@ -28,8 +28,13 @@ describe('Default assign()', () => {
       // fn: () => {},
       dom: document.createElement('div'),
     };
+    const source5 = {
+      // this tests that assignments to unexisting fields are ok
+      // (fix in 1.0.2)
+      newField: { with: ['deep', 'fields'] },
+    };
 
-    const res = assign(base, source1, source2, source3, source4);
+    const res = assign(base, source1, source2, source3, source4, source5);
     expect(res).toBe(base);
     expect(res).toEqual(base);
     expect(res).toEqual({
@@ -44,6 +49,7 @@ describe('Default assign()', () => {
       foobar: 'hoge',
       // fn: () => {},
       dom: document.createElement('div'),
+      newField: { with: ['deep', 'fields'] },
     });
     expect(source1).toEqual({ num: 2, foobar: 'hoge' });
     expect(source2).toEqual({ num: 3 });

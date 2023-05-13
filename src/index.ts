@@ -54,7 +54,7 @@ export function assignWithOptions<T extends {}>(
 ): T {
   const { ignoreValues, ignoreKeys, deleteValue, returnCopy, shallow } =
     options;
-  const target = returnCopy ? {} : (sources[0] as T);
+  const target = (returnCopy ? {} : sources[0]) as T;
 
   for (let i = returnCopy ? 0 : 1; i < sources.length; i++) {
     const source = sources[i];
@@ -65,23 +65,23 @@ export function assignWithOptions<T extends {}>(
     }
 
     // extend the target
-    const keys = Object.keys(source);
+    const keys = Object.keys(source) as (keyof T)[];
     for (const key of keys) {
       if (ignoreKeys?.includes(key)) continue;
 
-      const value = source[key as keyof T];
+      const value = source[key];
 
       if (value === target || ignoreValues?.includes(value)) {
         continue;
       }
 
       if (deleteValue !== undefined && deleteValue === value) {
-        delete (target as T)[key as keyof T];
+        delete target[key];
         continue;
       }
 
       if (Array.isArray(value)) {
-        (target as T)[key as keyof T] = value.slice() as T[keyof T];
+        target[key] = value.slice() as T[keyof T];
         continue;
       }
 
@@ -94,15 +94,20 @@ export function assignWithOptions<T extends {}>(
         // null values are not objects
         value === null ||
         typeof value !== 'object';
-      (target as T)[key as keyof T] = (
-        shouldShallowAssign
-          ? value
-          : assignWithOptions(
-              options,
-              (target as T)![key as keyof T] as {},
-              value
-            )
-      ) as T[keyof T];
+
+      if (shouldShallowAssign) {
+        target[key] = value;
+      } else {
+        // {} needs to be assigned first, in case it doesn't exist
+        if (target[key] === undefined) {
+          target[key] = {} as T[keyof T];
+        }
+        target[key] = assignWithOptions(
+          options,
+          target![key] as {},
+          value
+        ) as T[keyof T];
+      }
     }
   }
 
