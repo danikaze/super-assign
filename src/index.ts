@@ -34,21 +34,61 @@ export const assign = getCustomAssign() as Assign;
 
 export const assignCopy = getCustomAssign({ returnCopy: true }) as Assign;
 
-type Assign = <T extends {}, U extends any[]>(
+// nasty definition of Assign accepting from 1..10 parameters (apart from the Target)
+// but makes type resolution much faster, and sincerely, if you need to assign more
+// than 10 objects, you can do it in 2 steps
+type Assign = <
+  T extends Record<string, any>,
+  O1 extends Record<string, any>,
+  O2 extends Record<string, any>,
+  O3 extends Record<string, any>,
+  O4 extends Record<string, any>,
+  O5 extends Record<string, any>,
+  O6 extends Record<string, any>,
+  O7 extends Record<string, any>,
+  O8 extends Record<string, any>,
+  O9 extends Record<string, any>,
+  O10 extends Record<string, any>
+>(
   target: T,
-  ...args: U
-) => Assigned<T, U>;
+  o1?: O1 | null,
+  o2?: O2 | null,
+  o3?: O3 | null,
+  o4?: O4 | null,
+  o5?: O5 | null,
+  o6?: O6 | null,
+  o7?: O7 | null,
+  o8?: O8 | null,
+  o9?: O9 | null,
+  o10?: O10 | null
+) => Extend<
+  T,
+  Extend<
+    O1,
+    Extend<
+      O2,
+      Extend<
+        O3,
+        Extend<
+          O4,
+          Extend<O5, Extend<O6, Extend<O7, Extend<O8, Extend<O9, O10>>>>>
+        >
+      >
+    >
+  >
+>;
 
-type Assigned<T, U extends any[]> = {
-  0: T;
-  1: ((...t: U) => any) extends (head: infer Head, ...tail: infer Tail) => any
-    ? Assigned<Omit<T, keyof Head> & Head, Tail>
+type Extend<A extends Record<string, any>, B extends Record<string, any>> = {
+  [key in keyof A | keyof B]: key extends keyof B
+    ? B[key]
+    : key extends keyof A
+    ? A[key]
     : never;
-}[U['length'] extends 0 ? 0 : 1];
+};
 
 const checkDom = typeof Element !== 'undefined';
 
-export function assignWithOptions<T extends {}>(
+export function assignWithOptions<T extends Record<string, any>>(
   options: AssignOptions,
   ...sources: (T | any)[]
 ): T {
