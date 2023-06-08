@@ -10,6 +10,10 @@ describe('Default assign()', () => {
   });
 
   it('should extend and modify the target object but not the sources', () => {
+    /*
+     * Defining `base`, `source#` as const is just to check
+     * that the resulting `typeof res` is properly calculated
+     */
     const base = {
       num: 1,
       arr: [1, 2, 3],
@@ -18,21 +22,21 @@ describe('Default assign()', () => {
         bar: 'bar',
         deep: { v: 'hoge' },
       },
-    };
-    const source1 = { num: 2, foobar: 'hoge' };
-    const source2 = { num: 3 };
+    } as const;
+    const source1 = { num: 2, foobar: 'hoge' } as const;
+    const source2 = { num: 3 } as const;
     const source3 = {
       obj: { val: 'newval', foo: 'foo2', deep: { v2: 12345 } },
-    };
+    } as const;
     const source4 = {
       // fn: () => {},
       dom: document.createElement('div'),
-    };
+    } as const;
     const source5 = {
       // this tests that assignments to unexisting fields are ok
       // (fix in 1.0.2)
       newField: { with: ['deep', 'fields'] },
-    };
+    } as const;
 
     const res = assign(base, source1, source2, source3, source4, source5);
     expect(res).toBe(base);

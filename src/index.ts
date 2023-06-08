@@ -34,57 +34,241 @@ export const assign = getCustomAssign() as Assign;
 
 export const assignCopy = getCustomAssign({ returnCopy: true }) as Assign;
 
-// nasty definition of Assign accepting from 1..10 parameters (apart from the Target)
-// but makes type resolution much faster, and sincerely, if you need to assign more
-// than 10 objects, you can do it in 2 steps
-type Assign = <
-  T extends Record<string, any>,
-  O1 extends Record<string, any>,
-  O2 extends Record<string, any>,
-  O3 extends Record<string, any>,
-  O4 extends Record<string, any>,
-  O5 extends Record<string, any>,
-  O6 extends Record<string, any>,
-  O7 extends Record<string, any>,
-  O8 extends Record<string, any>,
-  O9 extends Record<string, any>,
-  O10 extends Record<string, any>
->(
-  target: T,
-  o1?: O1 | null,
-  o2?: O2 | null,
-  o3?: O3 | null,
-  o4?: O4 | null,
-  o5?: O5 | null,
-  o6?: O6 | null,
-  o7?: O7 | null,
-  o8?: O8 | null,
-  o9?: O9 | null,
-  o10?: O10 | null
-) => Extend<
-  T,
-  Extend<
-    O1,
+/*
+ * Nasty definition of Assign accepting from 1..10 parameters
+ * (apart from the Target) but makes type resolution much faster
+ * and provides better information on the editor
+ *
+ * Sincerely, it's needed to assign more than 10 objects,
+ * it can also be done it in 2 steps
+ */
+type Assign = {
+  <T extends Record<string, any>>(target: T): T;
+  <T extends Record<string, any>, O1 extends Record<string, any>>(
+    target: T,
+    o1?: O1 | null
+  ): Extend<T, O1>;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null
+  ): Extend<T, Extend<O1, O2>>;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>,
+    O3 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null,
+    o3?: O3 | null
+  ): Extend<T, Extend<O1, Extend<O2, O3>>>;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>,
+    O3 extends Record<string, any>,
+    O4 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null,
+    o3?: O3 | null,
+    o4?: O4 | null
+  ): Extend<T, Extend<O1, Extend<O2, Extend<O3, O4>>>>;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>,
+    O3 extends Record<string, any>,
+    O4 extends Record<string, any>,
+    O5 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null,
+    o3?: O3 | null,
+    o4?: O4 | null,
+    o5?: O5 | null
+  ): Extend<T, Extend<O1, Extend<O2, Extend<O3, Extend<O4, O5>>>>>;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>,
+    O3 extends Record<string, any>,
+    O4 extends Record<string, any>,
+    O5 extends Record<string, any>,
+    O6 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null,
+    o3?: O3 | null,
+    o4?: O4 | null,
+    o5?: O5 | null,
+    o6?: O6 | null
+  ): Extend<T, Extend<O1, Extend<O2, Extend<O3, Extend<O4, Extend<O5, O6>>>>>>;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>,
+    O3 extends Record<string, any>,
+    O4 extends Record<string, any>,
+    O5 extends Record<string, any>,
+    O6 extends Record<string, any>,
+    O7 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null,
+    o3?: O3 | null,
+    o4?: O4 | null,
+    o5?: O5 | null,
+    o6?: O6 | null,
+    o7?: O7 | null
+  ): Extend<
+    T,
+    Extend<O1, Extend<O2, Extend<O3, Extend<O4, Extend<O5, Extend<O6, O7>>>>>>
+  >;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>,
+    O3 extends Record<string, any>,
+    O4 extends Record<string, any>,
+    O5 extends Record<string, any>,
+    O6 extends Record<string, any>,
+    O7 extends Record<string, any>,
+    O8 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null,
+    o3?: O3 | null,
+    o4?: O4 | null,
+    o5?: O5 | null,
+    o6?: O6 | null,
+    o7?: O7 | null,
+    o8?: O8 | null
+  ): Extend<
+    T,
     Extend<
-      O2,
+      O1,
+      Extend<O2, Extend<O3, Extend<O4, Extend<O5, Extend<O6, Extend<O7, O8>>>>>>
+    >
+  >;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>,
+    O3 extends Record<string, any>,
+    O4 extends Record<string, any>,
+    O5 extends Record<string, any>,
+    O6 extends Record<string, any>,
+    O7 extends Record<string, any>,
+    O8 extends Record<string, any>,
+    O9 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null,
+    o3?: O3 | null,
+    o4?: O4 | null,
+    o5?: O5 | null,
+    o6?: O6 | null,
+    o7?: O7 | null,
+    o8?: O8 | null,
+    o9?: O9 | null
+  ): Extend<
+    T,
+    Extend<
+      O1,
       Extend<
-        O3,
+        O2,
         Extend<
-          O4,
-          Extend<O5, Extend<O6, Extend<O7, Extend<O8, Extend<O9, O10>>>>>
+          O3,
+          Extend<O4, Extend<O5, Extend<O6, Extend<O7, Extend<O8, O9>>>>>
         >
       >
     >
-  >
->;
-
-type Extend<A extends Record<string, any>, B extends Record<string, any>> = {
-  [key in keyof A | keyof B]: key extends keyof B
-    ? B[key]
-    : key extends keyof A
-    ? A[key]
-    : never;
+  >;
+  <
+    T extends Record<string, any>,
+    O1 extends Record<string, any>,
+    O2 extends Record<string, any>,
+    O3 extends Record<string, any>,
+    O4 extends Record<string, any>,
+    O5 extends Record<string, any>,
+    O6 extends Record<string, any>,
+    O7 extends Record<string, any>,
+    O8 extends Record<string, any>,
+    O9 extends Record<string, any>,
+    O10 extends Record<string, any>
+  >(
+    target: T,
+    o1?: O1 | null,
+    o2?: O2 | null,
+    o3?: O3 | null,
+    o4?: O4 | null,
+    o5?: O5 | null,
+    o6?: O6 | null,
+    o7?: O7 | null,
+    o8?: O8 | null,
+    o9?: O9 | null,
+    o10?: O10 | null
+  ): Extend<
+    T,
+    Extend<
+      O1,
+      Extend<
+        O2,
+        Extend<
+          O3,
+          Extend<
+            O4,
+            Extend<O5, Extend<O6, Extend<O7, Extend<O8, Extend<O9, O10>>>>>
+          >
+        >
+      >
+    >
+  >;
 };
+
+type Extend<A, B> = A extends null | undefined
+  ? B extends null | undefined
+    ? // both empty
+      {}
+    : // A empty
+      B
+  : B extends null | undefined
+  ? // B empty
+    A
+  : // A and B exist
+  B extends Record<string, any>
+  ? A extends Record<string, any>
+    ? // both A and B are objects
+      {
+        [key in keyof A | keyof B]: key extends keyof B
+          ? key extends keyof A
+            ? // key of both A and B -> recursive
+              Extend<A[key], B[key]>
+            : // only key of B
+              B[key]
+          : key extends keyof A
+          ? // only key of A
+            A[key]
+          : // neither key of A nor B (unreachable code)
+            never;
+      }
+    : // only B is an object
+      B
+  : // B is not an object
+    B;
 
 const checkDom = typeof Element !== 'undefined';
 
